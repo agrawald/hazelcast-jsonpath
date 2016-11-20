@@ -11,8 +11,10 @@ import com.hazelcast.query.SqlPredicate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.ExitCodeGenerator;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -25,6 +27,8 @@ import java.util.Collection;
 public class Application implements CommandLineRunner {
     @Autowired
     HazelcastInstance instance;
+    @Autowired
+    ApplicationContext context;
     private static long size = 0;
 
     public static void main(String[] args) {
@@ -37,7 +41,7 @@ public class Application implements CommandLineRunner {
 
         long start = System.currentTimeMillis();
 
-        for (int i = 0; i < 1000000; i++) {
+        for (int i = 0; i < 3000000; i++) {
             imap.put("json" + i, generate("dheeraj"+i));
         }
         log.info("Time to save {}b: {}ms", size, System.currentTimeMillis() - start);
@@ -45,6 +49,12 @@ public class Application implements CommandLineRunner {
         start = System.currentTimeMillis();
         Collection<JsonWrapper> nodes = imap.values(new SqlPredicate("attribute[name]=dheeraj999999"));
         log.info("Time to find: {}ms {}", System.currentTimeMillis() - start, nodes);
+        SpringApplication.exit(context, new ExitCodeGenerator() {
+            @Override
+            public int getExitCode() {
+                return 200;
+            }
+        });
 
     }
 

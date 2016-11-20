@@ -10,3 +10,7 @@ Number of records: 1000000 of 24Mb
 
 Time to save: 30.191 sec
 Time to retrieve one value with name = dummy999999: 7ms
+
+Number of records: 3000000 of 73Mb
+Time to save 73888890b: 542746ms
+Time to find one record: 16ms
